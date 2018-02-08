@@ -4,7 +4,7 @@ This is a sample application developed with revolutionary serverless IDE Sigma, 
 
 All the deployments of this application are based on Amazon AWS. To open the project, you will need the Sigma IDE which can be found at https://sigma.slappforge.com. You will need to create an account and provide your AWS credentials to open the project (Your AWS credentials will not be acquired by SLAppForge under any circumstances).
 ## Usecase Description
-Nowadays static web sites can be hosted on services like google drive or even in github without any cost. But this advatnage becomes useless when we want to add a contact us form to the web site. Either we have to run a server at the backend to collect contact us data, or we have to purchase BAAS which facilitate a backend for our form. Either of these options costs us around $5 - $10 per month regardless of the traffic we get for our website.  
+Nowadays static web sites can be hosted on services like google drive or even in github without any cost. But this advatnage becomes useless when we want to add a contact us form to the web site. Either we have to run a server at the backend to collect contact us data, or we have to purchase BAAS which facilitates a backend for our form. Either of these options costs us around $5 - $10 per month regardless of the traffic we get for our website.  
 
 This example presents a serverless solution developed on top of AWS(Amazon Web Service) using SIGMA IDE to implement a contact us form with minimum effort and minimum cost.
 
