@@ -18,59 +18,62 @@
         "id": "1fe8cc6a-6339-45df-ac00-44376a53c2c1",
         "parent": "592f3252-0358-4b4e-bd5b-dd686cbd78fc",
         "name": "handler.js",
-        "type": "LAMBDA_FILE",
+        "type": "JS_LAMBDA",
         "isDirectory": false,
         "children": [],
         "isRemovable": true,
         "filePath": "simple-contact-us-handler/handler.js",
-        "code": "let AWS = require('aws-sdk');\nconst ddb = new AWS.DynamoDB.DocumentClient();\nconst validate = require(\"validate.js\");\nexports.handler = function (event, context, callback) {\n\t//validating email and name\n\tvar constraints = {\n\t\temail: {\n\t\t\tpresence: true,\n\t\t\temail: true\n\t\t},\n\t\tname: {\n\t\t\tpresence: true,\n\t\t\tlength: {\n\t\t\t\tminimum: 1\n\t\t\t},\n\t\t}\n\t};\n\n\tlet invalid = validate(event, constraints);\n\n\tif (!invalid) {\n\t\tlet today = new Date().toLocaleDateString();\n\t\tddb.put({\n\t\t\tTableName: 'contact_us',\n\t\t\tItem: {\n\t\t\t\t'name': event.name,\n\t\t\t\t'email': event.email,\n\t\t\t\t'phone': event.phone,\n\t\t\t\t'company': event.company,\n\t\t\t\t'comment': event.comment,\n\t\t\t\t'entryDate': today\n\t\t\t}\n\t\t}, function (err, data) {\n\t\t\tif (err) {\n\t\t\t\tcallback(err, null);\n\t\t\t} else {\n\t\t\t\tcallback(null, \"Successfully Saved Entry!\");\n\t\t\t}\n\t\t});\n\t} else {\n\t\tcallback(JSON.stringify(invalid), null);\n\t}\n}",
-        "resources": [
-          "apigusEast1contactuscontactpost",
-          "ddbcontactus"
-        ],
         "triggers": [
           {
             "resourceName": "apigusEast1contactuscontactpost",
             "config": {}
           }
         ],
-        "version": 13
+        "config": {
+          "runtime": "nodejs10.x",
+          "handler": "handler",
+          "timeout": 60,
+          "memory": 128,
+          "layers": []
+        },
+        "cursor": {
+          "lineNumber": 43,
+          "column": 4
+        }
       },
       "8d0c1e1b-48c7-4ea8-87b5-ab407298bc23": {
         "id": "8d0c1e1b-48c7-4ea8-87b5-ab407298bc23",
         "parent": "592f3252-0358-4b4e-bd5b-dd686cbd78fc",
         "name": "viewer.js",
-        "type": "LAMBDA_FILE",
+        "type": "JS_LAMBDA",
         "isDirectory": false,
         "children": [],
         "isRemovable": true,
         "filePath": "simple-contact-us-handler/viewer.js",
-        "code": "let AWS = require('aws-sdk');\nconst ddb = new AWS.DynamoDB.DocumentClient();\nexports.handler = function (event, context, callback) {\n\tlet searchDate = event.queryStringParameters.date;\n\tlet response = {\n\t\tbody: \"\",\n\t\tstatusCode: 200,\n\t\tisBase64Encoded: false\n\t}\n\tddb.scan({\n\t\tTableName: 'contact_us',\n\t\tExpressionAttributeValues: {\n\t\t\t':filterDate': searchDate\n\t\t},\n\t\tFilterExpression: 'entryDate = :filterDate'\n\t}, function (err, data) {\n\t\tif (err) {\n\t\t\tresponse.body = JSON.stringify(err);\n\t\t\tcallback(response, null);\n\t\t} else {\n\t\t\tresponse.body = JSON.stringify(data);\n\t\t\tcallback(null, response);\n\t\t}\n\t});\n}",
-        "resources": [
-          "ddbcontactus",
-          "ddbcontactus",
-          "apigusEast1contactusviewget",
-          "ddbcontactus",
-          "ddbcontactus",
-          "apigusEast1contactusviewget",
-          "apigusEast1contactusviewget",
-          "apigusEast1contactusviewget"
-        ],
         "triggers": [
           {
             "resourceName": "apigusEast1contactusviewget",
             "config": {}
           }
         ],
-        "version": 1
+        "config": {
+          "runtime": "nodejs10.x",
+          "handler": "handler",
+          "timeout": 60,
+          "memory": 128,
+          "layers": []
+        },
+        "cursor": {
+          "lineNumber": 30,
+          "column": 3
+        }
       }
     },
-    "rootNode": "592f3252-0358-4b4e-bd5b-dd686cbd78fc",
     "openFiles": [
       "1fe8cc6a-6339-45df-ac00-44376a53c2c1",
       "8d0c1e1b-48c7-4ea8-87b5-ab407298bc23"
     ],
-    "currentFileId": "8d0c1e1b-48c7-4ea8-87b5-ab407298bc23",
+    "currentFileId": "1fe8cc6a-6339-45df-ac00-44376a53c2c1",
     "resources": {
       "apigusEast1contactuscontactpost": {
         "name": "apigusEast1contactuscontactpost",
@@ -89,16 +92,7 @@
           "stageMode": 0,
           "stageName": "Prod"
         },
-        "globallyEditable": true,
-        "usage": {
-          "1fe8cc6a-6339-45df-ac00-44376a53c2c1": {
-            "operations": {},
-            "occurrence": 1,
-            "triggers": [
-              {}
-            ]
-          }
-        }
+        "globallyEditable": true
       },
       "ddbcontactus": {
         "name": "ddbcontactus",
@@ -130,43 +124,7 @@
           },
           "valid": true
         },
-        "globallyEditable": false,
-        "usage": {
-          "1fe8cc6a-6339-45df-ac00-44376a53c2c1": {
-            "operations": {
-              "put": [
-                {
-                  "TableName": "contact_us",
-                  "Item": {
-                    "name": "@{event.name}",
-                    "email": "@{event.email}",
-                    "phone": "@{event.phone}",
-                    "company": "@{event.company}",
-                    "comment": "@{event.comment}",
-                    "entryDate": "@{today}"
-                  }
-                }
-              ]
-            },
-            "occurrence": 1,
-            "triggers": []
-          },
-          "8d0c1e1b-48c7-4ea8-87b5-ab407298bc23": {
-            "operations": {
-              "scan": [
-                {
-                  "TableName": "contact_us",
-                  "ExpressionAttributeValues": {
-                    ":filterDate": "@{searchDate}"
-                  },
-                  "FilterExpression": "entryDate = :filterDate"
-                }
-              ]
-            },
-            "occurrence": 1,
-            "triggers": []
-          }
-        }
+        "globallyEditable": false
       },
       "apigusEast1contactusviewget": {
         "name": "apigusEast1contactusviewget",
@@ -185,41 +143,58 @@
           "stageMode": 0,
           "stageName": "Prod"
         },
-        "globallyEditable": true,
-        "usage": {
-          "8d0c1e1b-48c7-4ea8-87b5-ab407298bc23": {
-            "operations": {},
-            "occurrence": 1,
-            "triggers": [
-              {}
-            ]
-          }
-        }
+        "globallyEditable": true
       }
     },
-    "packageJSON": {
-      "dependencies": {
-        
-      }
+    "customTemplate": {
+      "dialect": "CloudFormation",
+      "definitions": null
     },
-    "lambdaId": "1fe8cc6a-6339-45df-ac00-44376a53c2c1",
-    "additionalFiles": [],
     "envVariables": [
       {
         "lambdaId": "all",
         "varKey": "SIGMA_AWS_ACC_ID",
-        "varValue": "",
-        "editable": false
+        "varValue": null,
+        "editable": false,
+        "shouldPersist": false,
+        "displayOnly": false
       }
-    ]
+    ],
+    "packageJSON": {
+      "dependencies": {
+        "aws-sdk": {
+          "name": "aws-sdk",
+          "version": "2.644.0",
+          "dev": true,
+          "language": "nodejs"
+        },
+        "validate.js": {
+          "name": "validate.js",
+          "version": "0.12.0",
+          "dev": false,
+          "language": "nodejs"
+        }
+      }
+    },
+    "rootNode": "592f3252-0358-4b4e-bd5b-dd686cbd78fc",
+    "lambdaId": "1fe8cc6a-6339-45df-ac00-44376a53c2c1",
+    "additionalFiles": []
   },
   "PROJECT_META": {
     "projectName": "simple-contact-us-handler",
     "projectDescription": "Simple contact us form for a static web site using AWS Lambda, DynamoDB and APIGateway",
     "projectVersion": "1.0.0",
     "projectRegion": "us-east-1",
-    "repoName": "simple-contact-us-handler",
-    "repoUrl": "https://github.com/Udith/simple-contact-us-handler",
-    "lastSave": 1518003717231
+    "platform": "AWS",
+    "language": "nodejs",
+    "platformRegions": {},
+    "lastSave": 1585807775123
+  },
+  "VCS_STATE": {
+    "provider": "GitHub",
+    "repo": {
+      "name": "simple-contact-us-handler",
+      "url": "https://github.com/Udith/simple-contact-us-handler"
+    }
   }
 }
