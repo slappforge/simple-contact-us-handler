@@ -1,9 +1,10 @@
 {
-  "name": "PJ",
+  "name": "simple-contact-us-handler",
   "version": "1.0.0",
   "dependencies": {
-    "aws-sdk": "2.176.0",
-    "@slappforge/slappforge-sdk": "0.0.3",
     "validate.js": "0.12.0"
+  },
+  "devDependencies": {
+    "aws-sdk": "2.644.0"
   }
 }
